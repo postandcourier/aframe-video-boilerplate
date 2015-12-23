@@ -36,9 +36,11 @@
     var video;
     var lastTime = Date.now();
     var animationFrame;
-    var fps = 60;
+    var fps = 60; // doubt this is possible, but whatev
     var loopAttribute = videosphere.getAttribute('loop');
     
+    // loop function inspired by Mike Newell's InlineVideo.js
+    // github: newshorts/InlineVideo
     function loop() {
       var time = Date.now();
       var elapsed = ( time - lastTime ) / 1000;
@@ -52,13 +54,9 @@
       var currentTime = ( Math.round( parseFloat( video.currentTime ) * 10000 ) / 10000 );
       var duration = ( Math.round( parseFloat( video.duration ) * 10000 ) / 10000 );
       if ( currentTime >= duration ) {
-        console.log( 'video.currentTime: ' + currentTime );
-        console.log( 'lastTime: ' + lastTime );
-        console.log( 'elapsed: ' + elapsed );
-        
+        // reset the video if looping is set to true
         if ( loopAttribute === 'true' ) {
           video.currentTime = 0;
-          console.log("will loop");
         } else {
           return;
         }
@@ -68,7 +66,10 @@
     }
     
     document.querySelector('#real-button').addEventListener('click', function(e) {
+      // define the video element since it's not present on load.
+      // TODO: find a better way to define this based on A-frame loading
       video = videosphere.querySelector('video');
+      
       this.style.display = 'none';
       videosphere.querySelector('video').load();
       loop();
