@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Video Sphere</title>
+    <meta name="description" content="Video Sphere — A-Frame">
+    <script src="aframe.js"></script>
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  </head>
+  <body>
+    
+    <a-scene>
+      <a-camera id="cursor" position="0 1.8 4"
+        cursor="fuse: true; maxDistance:500; timeout: 1000"
+        cursor-visible="true" 
+        cursor-scale="2" 
+        cursor-color="#4CC3D9" 
+        cursor-offset="2" 
+        cursor-maxdistance="500" 
+        cursor-opacity="0.5">
+      </a-camera>
+      <a-videosphere id="videosphere" src="charleston.mp4" autoplay="false" loop="true" rotation="0 180 0"></a-videosphere>
+        
+      <a-image id="play-video" height="12" width="56" src="play-button.png" position="0 -40 -200" rotation="-10 0 0" opacity="0.5" visible="true">
+        <a-mouseenter opacity="1"></a-mouseenter>
+        <a-mouseleave opacity="0.5"></a-mouseleave>
+      </a-image>
+        
+    </a-scene>
+    <input type="button" value="Play" onclick="document.querySelector('#videosphere').getElementsByTagName('video')[0].play()" style="z-index: 1000; position: absolute; top:0; left:0;">
+  </body>
+  
+  <script>
+    
+    var videosphere = document.querySelector('#videosphere');
+    
+    var theVideo = document.querySelector('video');
+    
+    theVideo.addEventListener('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); }, false);
+    
+    if ( theVideo.hasAttribute('controls') ) {
+      theVideo.removeAttribute('controls');
+    }
+    
+    document.querySelector('#play-video').addEventListener('click', function() {
+      videosphere.getElementsByTagName('video')[0].play();
+      this.setAttribute('visible', 'false');
+    });
+    
+  </script>
+</html>
