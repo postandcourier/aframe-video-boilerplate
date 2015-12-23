@@ -24,7 +24,7 @@
     </style>
     
     <a-scene>
-      <a-videosphere id="videosphere" src="https://ucarecdn.com/bcece0a8-86ce-460e-856b-40dac4875f15/" autoplay="false" loop="true" rotation="0 180 0"></a-videosphere>
+      <a-videosphere id="videosphere" src="charleston.mp4" autoplay="false" loop="true" rotation="0 180 0"></a-videosphere>
     </a-scene>
     <button id="real-button">Start</button>
   </body>
@@ -34,7 +34,7 @@
     var videosphere = document.querySelector('#videosphere');
     
     var video;
-    var lastTime;
+    var lastTime = Date.now();
     var animationFrame;
     var fps = 60; // doubt this is possible, but whatev
     var loopAttribute = videosphere.getAttribute('loop');
@@ -70,7 +70,7 @@
       // TODO: find a better way to define this based on A-frame loading
       video = videosphere.querySelector('video');
       
-      video.addEventListener('loadeddata', function() {
+      video.addEventListener('canplaythrough', function() {
         document.querySelector('#real-button').style.display = "none";
         lastTime = Date.now();
         loop();
