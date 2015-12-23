@@ -10,43 +10,69 @@
   </head>
   <body>
     
+    <style>
+      #real-button {
+        background: rgba(255,255,255,0.8);
+        color:#000;
+        position: fixed;
+        top: calc(50% - 4em);
+        left: calc(50% - 3em);
+        width: 6em;
+        height: 4em;
+        z-index: 10;
+      }
+    </style>
+    
     <a-scene>
-      <a-camera id="cursor" position="0 1.8 4"
-        cursor="fuse: true; maxDistance:500; timeout: 1000"
-        cursor-visible="true" 
-        cursor-scale="2" 
-        cursor-color="#4CC3D9" 
-        cursor-offset="2" 
-        cursor-maxdistance="500" 
-        cursor-opacity="0.5">
-      </a-camera>
       <a-videosphere id="videosphere" src="charleston.mp4" autoplay="false" loop="true" rotation="0 180 0"></a-videosphere>
-        
-      <a-image id="play-video" height="12" width="56" src="play-button.png" position="0 -40 -200" rotation="-10 0 0" opacity="0.5" visible="true">
-        <a-mouseenter opacity="1"></a-mouseenter>
-        <a-mouseleave opacity="0.5"></a-mouseleave>
-      </a-image>
-        
     </a-scene>
-    <input type="button" value="Play" onclick="document.querySelector('#videosphere').getElementsByTagName('video')[0].play()" style="z-index: 1000; position: absolute; top:0; left:0;">
+    <button id="real-button">Start</button>
   </body>
   
-  <script>
+  <script>  
     
     var videosphere = document.querySelector('#videosphere');
     
-    var theVideo = document.querySelector('video');
+    var video;
+    var lastTime = Date.now();
+    var animationFrame;
+    var fps = 60;
+    var loopAttribute = videosphere.getAttribute('loop');
     
-    theVideo.addEventListener('contextmenu', function (e) { e.preventDefault(); e.stopPropagation(); }, false);
-    
-    if ( theVideo.hasAttribute('controls') ) {
-      theVideo.removeAttribute('controls');
+    function loop() {
+      var time = Date.now();
+      var elapsed = ( time - lastTime ) / 1000;
+      
+      if ( elapsed >= ( ( 1000 / fps ) / 1000 ) ) {
+        video.currentTime = video.currentTime + elapsed;
+        lastTime = time;
+      }
+      
+      // stop at the end of the video
+      var currentTime = ( Math.round( parseFloat( video.currentTime ) * 10000 ) / 10000 );
+      var duration = ( Math.round( parseFloat( video.duration ) * 10000 ) / 10000 );
+      if ( currentTime >= duration ) {
+        console.log( 'video.currentTime: ' + currentTime );
+        console.log( 'lastTime: ' + lastTime );
+        console.log( 'elapsed: ' + elapsed );
+        
+        if ( loopAttribute === 'true' ) {
+          video.currentTime = 0;
+          console.log("will loop");
+        } else {
+          return;
+        }
+      }
+      
+      animationFrame = requestAnimationFrame(loop);
     }
     
-    document.querySelector('#play-video').addEventListener('click', function() {
-      videosphere.getElementsByTagName('video')[0].play();
-      this.setAttribute('visible', 'false');
-    });
+    document.querySelector('#real-button').addEventListener('click', function(e) {
+      video = videosphere.querySelector('video');
+      this.style.display = 'none';
+      videosphere.querySelector('video').load();
+      loop();
+    }, false);
     
   </script>
 </html>
