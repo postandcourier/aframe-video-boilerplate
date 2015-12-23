@@ -70,9 +70,14 @@
       // TODO: find a better way to define this based on A-frame loading
       video = videosphere.querySelector('video');
       
-      this.style.display = 'none';
+      this.innerHTML = 'Loading...';
       videosphere.querySelector('video').load();
-      loop();
+      
+      video.addEventListener('loadeddata', function() {
+        document.querySelector('#real-button').style.display = "none";
+        loop();
+      });
+      
     }, false);
     
   </script>
