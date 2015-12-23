@@ -34,7 +34,7 @@
     var videosphere = document.querySelector('#videosphere');
     
     var video;
-    var lastTime = Date.now();
+    var lastTime;
     var animationFrame;
     var fps = 60; // doubt this is possible, but whatev
     var loopAttribute = videosphere.getAttribute('loop');
@@ -70,13 +70,16 @@
       // TODO: find a better way to define this based on A-frame loading
       video = videosphere.querySelector('video');
       
+      video.addEventListener('loadeddata', function() {
+        document.querySelector('#real-button').style.display = "none";
+        lastTime = Date.now();
+        loop();
+      });
+      
       this.innerHTML = 'Loading...';
       videosphere.querySelector('video').load();
       
-      video.addEventListener('loadeddata', function() {
-        document.querySelector('#real-button').style.display = "none";
-        loop();
-      });
+      
       
     }, false);
     
